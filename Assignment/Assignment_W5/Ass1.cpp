@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string.h>
 
-int main(){
+int main(){ 
     std:: cout << "Nhap so cac doi tuong: ";
     int n;
     std:: cin >> n;
