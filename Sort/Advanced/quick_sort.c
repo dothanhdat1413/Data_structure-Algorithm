@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 void swap(int* a, int* b);
-int partition(int* a, int l, int r);// chia mảng
-void quick_sort(int* a, int l, int r);
+int partition(int* a, int begin, int end);// chia mảng
+void quick_sort(int* a, int begin, int end);
 int main(){
 
 }
@@ -13,6 +13,7 @@ void swap(int* a, int* b) {
     *b = temp;
 }
 
-void partition(int* a, int l, int r) {}
+int partition(int* a, int begin, int end) {
+}
 
-void quick_sort(int *a, int l, int r) {}
+void quick_sort(int *a, int begin, int end) {}
