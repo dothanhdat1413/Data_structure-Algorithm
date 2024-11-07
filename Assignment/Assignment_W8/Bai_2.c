@@ -18,12 +18,7 @@ int main() {
         return 0;
     }
 
-    Node* p = L->first;
     int i = 0;
-    while(p != NULL){
-        printf("%d ", p->data);
-        p = p->next;
-    }
 
     printf("Winner: %d\n", Game_play(L,M));
 
@@ -49,9 +44,6 @@ int Game_init(List* L, int N)
         List_add(L,new_node,i,0,0);
     }
 
-#ifdef TEST
-    printf("INIT\n");
-#endif
     return 1;
 }
 
@@ -67,10 +59,16 @@ int Game_play(List* L, int M)
             }
             p = p->next;
         } // duyệt tới vị trí thứ M
+        if(p->next == NULL){
+            temp = L->first;
+        } else {
+            temp = p->next;
+        }
+
+        // List_print(L);
         printf("Player %d is out\n", p->data);
-        temp = p->next;
-        
-        free(p);
+        List_remove_condition(L,p->data); 
+
         p = temp; // đây mới chỉ là xóa khỏi danh sách và duyệt tới phần tử kế tiếp thôi
     }
 

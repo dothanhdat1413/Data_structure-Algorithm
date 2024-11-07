@@ -52,6 +52,10 @@ void List_remove(List *L, int index, int remove_first, int remove_last );
  */
 void List_delete(List *L);
 
+void List_remove_condition(List *L, data_type condition);
+
+void List_print(List *L);
+
 /**
  * @brief Hàm di chuyển con trở đến vị trí node thứ index của list tính từ 0
  * 
@@ -63,7 +67,6 @@ Node* List_goto(List *L, int index);
 
 void List_init(List *L, Node* first, Node* last)
 {   
-    printf("List init\n");
     L->first = first;
     L->last = last;
 }
@@ -103,10 +106,10 @@ void List_remove(List *L, int index, int remove_first, int remove_last)
 {
     if(remove_first || index == 1)
     {   
-        Node* temp = L->first;
+        Node* temp = L->first->next;
         free(L->first);
-        L->first = L->first->next;
-        printf("List remove first");
+        L->first = temp;
+
         return;
     }
 
@@ -120,16 +123,19 @@ void List_remove(List *L, int index, int remove_first, int remove_last)
         free(p->next);
         p->next = NULL;
         L->last = p;
-        printf("List remove last");
         return;
     }
 
     Node* p = List_goto(L, index - 1 - 1); // Tới vị trí trước vị trí cần xóa
-    if(p == NULL){
+    if(p != NULL){
         Node* temp = p->next->next;
+
+        if(p->next->next == NULL) {
+            L->last = p; // Nếu xóa phần tử cuối thì cập nhật lại last
+        }
+
         free(p->next);
         p->next = temp;
-        printf("List remove %d\n", index);
         return;
     } // Không có vị trí đó trong danh sách, index nhập vào tính từ 1
 
@@ -141,7 +147,6 @@ void List_remove(List *L, int index, int remove_first, int remove_last)
     free(p->next);
     p->next = NULL;
     L->last = p;
-    printf("List remove last");
     return;
 }   
 
@@ -165,13 +170,10 @@ Node* List_goto(List *L, int index){
     Node* p = L->first;
     int i = 0;
     while(p->next != NULL)
-    {   
-        printf("%d\n", i);
+    {
         if(i == index)
         {   
-            printf("FOUND");
             return p;
-            printf("CANT NOT RETURN");
             break;
         }
 
@@ -181,3 +183,37 @@ Node* List_goto(List *L, int index){
     return NULL; // Không có vị trí đó trong danh sách, index nhập vào tính từ 0
 }
 #endif
+
+void List_remove_condition(List *L, data_type condition)
+{
+    Node* p = L->first;
+    Node* temp = NULL;
+    int i = 1;
+    do
+    {
+        if(p->data == condition)
+        {
+            List_remove(L, i, 0, 0);
+            return;
+        }
+        else
+        {
+            p = p->next; 
+            i++;
+        }
+    }
+    while(p != NULL);
+
+}
+
+
+
+void List_print(List *L){
+    Node* p = L->first;
+    int i = 0;
+    while(p != NULL){
+        printf("%d ", p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
