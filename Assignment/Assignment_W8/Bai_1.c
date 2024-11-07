@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct Node{ 
     SinhVien data; 
-    Node *link; 
+    Node *next; 
 } Node;
 
 typedef struct { 
@@ -39,19 +39,33 @@ void input(List* L);
 void output(List* L);
 
 /**
- * @brief So sánh 2 chuỗi số dưới dạng char
+ * @brief So sánh mã số sinh viên của 2 Node
  * 
- * @param a 
- * @param b 
- * @return 1 nếu a>b, 0 nếu a=b, -1 nếu a<b
+ * @param A địa chỉ node A 
+ * @param B địa chỉ node B
+ * @return 1 nếu MSSV của A > B, 0 là còn lại
  */
-int compare(char[8] a, char[8]b);
+int compare(Node* A, Node* B);
 /**
- * @brief sort danh sách theo thứ tự tăng dần theo mã sinh viên
+ * @brief Đổi chỗ 2 thằng
+ * 
+ * @param a
+ * @param b
+ */
+void swap(Node* a, Node* b);
+/**
+ * @brief sort danh sách theo thứ tự tăng dần theo mã sinh viên, sử dụng bubble sort
  * 
  * @param L 
  */
 void sort(List* L);
+/**
+ * @brief thêm hồ sơ sinh viên vào
+ * 
+ * @param L list sinh viên 
+ * @param N
+ */
+void insert(List*L, Node*N);
 
 int main() {
     Node f_node;
@@ -91,7 +105,7 @@ void input(List*L){
     printf("    Nhap khoa: ");
     fflush(stdin);
     gets(L->first->data.khoa);
-    L->first->link = L->last;
+    L->first->next = L->last;
     i++;
 
     printf("Nhap sinh vien thu %d:\n", i);
@@ -119,7 +133,7 @@ void input(List*L){
     printf("    Nhap khoa: ");
     fflush(stdin);
     gets(L->last->data.khoa);
-    L->last->link = NULL;
+    L->last->next = NULL;
     i++;
 
     char want_input='Y';
@@ -129,8 +143,8 @@ void input(List*L){
     printf("%c\n", want_input);
 
     while(((want_input != 'N')&&(want_input != 'n'))) {   
-        L->last->link = (Node*)malloc(sizeof(Node)); // cuối cũ
-        L->last = L->last->link;// trỏ đến cuối mới
+        L->last->next = (Node*)malloc(sizeof(Node)); // gán next của cuối mới vào next của cuối cũ
+        L->last = L->last->next;// cập nhật last mới của list 
         printf("Nhap sinh vien thu %d:\n", i);
         printf("    Nhap ma sinh vien: ");
         fflush(stdin);
@@ -156,7 +170,7 @@ void input(List*L){
         printf("    Nhap khoa: ");
         fflush(stdin);
         gets(L->last->data.khoa);
-        L->last->link = NULL;
+        L->last->next = NULL;
         i++;
 
         printf("Ban co muon nhap tiep khong (Y/N)?");
@@ -176,9 +190,53 @@ void output(List *L){
         printf("    Dia chi: %s\n", p->data.diaChi);
         printf("    Lop: %s\n", p->data.lop);
         printf("    Khoa: %s\n", p->data.khoa);
-        p = p->link;
+        p = p->next;
         i++;
     }
 }
 
-int compare()
+int compare(Node* A, Node* B){
+    for(int i = 7; i>=0 ;i--){
+        if(A->data.maSV[i] > B->data.maSV[i]){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void swap(Node* A, Node* B){
+    Node* temp = (Node*)malloc(sizeof(Node));
+    temp->data = A->data;
+    A->data = B->data;
+    B->data = temp->data;
+    free(temp);
+}
+void sort(List* L){
+    Node* p = L->first;
+    Node* cur = L->first;
+    while(cur->next != NULL){
+        while(p->next != NULL){
+            if(compare(p,p->next)){
+                swap(p,p->next);
+            }
+            p = p->next; // đến phần tử tiếp theo
+#ifdef TEST
+    printf("BUBBLE\n");
+    if(p->next == NULL) printf("NULL\n");
+#endif
+        }
+        cur = cur->next;
+    }
+#ifdef TEST
+    printf("Sorted\n");
+#endif
+}
+
+void insert(List* L, Node* N){
+    Node* p = L->first;
+    while(!compare(N->data.maSV,p->data.maSV)){
+        p = p -> next;
+    }
+    N->next = p->next;
+    p->next->next = N;
+}
