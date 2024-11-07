@@ -12,4 +12,10 @@ Ví dụ như sau:
 -	Nếu N = 5, M = 1, thì thứ tự người chơi bị loại bỏ là 2, 4, 1, 5 người 3 là người chiến thắng 
 Yêu cầu: 
 1. Thiết kế giải thuật để tìm ra người chiến thắng cuối cùng, viết chương trình cài đặt giải thuật bằng việc sử dụng cấu trúc dữ liệu kiểu danh sách liên kết để duyệt luật chơi và tìm được vị trí người chiến thắng với các trường hợp của M = 1,2,3 và N bất kỳ 
+
+Tạo Node có giá trị là số thứ tự của người chơi
+Duyệt qua các node và đếm từ 1 tới M, khi tới M rồi thì xóa node đó và tiếp tục cho đến khi chỉ còn 1 người
+
+-> độ phức tạp thuật toán là M*N!
+
 2. Nếu M = 1, xác định độ phức tạp thuật toán tương ứng với giải thuật đã đề xuất, tính thời gian chạy chương trình với giá trị N > 100000
