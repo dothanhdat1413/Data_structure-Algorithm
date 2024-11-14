@@ -242,6 +242,12 @@ int Node_compare(Node *A, Node *B, int mode)
     return 0;
 }
 
+void Node_swap(Node* A, Node* B)
+{
+    data_type temp = A->data;
+    A->data = B->data;
+    B->data = temp;
+}
 /*
 void List_remove_condition(List *L, data_type condition)
 {

@@ -61,6 +61,8 @@ int main(){
 
     add_file_to_List(&L_1, file_2_0);
 
+    List_delete(&L_1);
+    List_delete(&L_2);
 }
 
 void add_file_to_List(List *L, Node* file){
@@ -84,4 +86,50 @@ void cut_file_to_fit(List *L){
     Node* p = L->first;
     unsigned long long total_size = 0;
     
+    while(p->next->next != NULL)    // duyệt đến node trước node cuối
+    {
+
+    }
+
+}
+
+void cut_file_to_fit(List* L) {
+    if (!L || !L->first) return;
+
+    unsigned long long total_size = 0;
+    int swapped;
+
+    // Sắp xếp các file lớn lên đầu và dừng sớm khi đạt MAX_32G
+    do {
+        swapped = 0;
+        Node* current = L->first;
+        Node* prev = NULL;
+
+        while (current->next != NULL) {
+            if (Node_compare(current, current->next, SIZE)) {
+                Node_swap(current, current->next);
+                swapped = 1;
+            }
+
+            if (prev == NULL) {  
+                total_size += current->data.size;
+                if (total_size > MAX_32G) {
+                    L->last = prev; 
+                    prev->next = NULL;
+
+                    // Dừng sớm và giải phóng
+                    Node* to_free = current->next;
+                    while (to_free) {
+                        Node* temp = to_free;
+                        to_free = to_free->next;
+                        free(temp);
+                    }
+                    return;
+                }
+            }
+
+            prev = current;
+            current = current->next;
+        }
+    } while (swapped);
 }
