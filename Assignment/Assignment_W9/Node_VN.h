@@ -3,9 +3,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // typedef int data_type;
-// typedef char* data_type;
+typedef char* data_type;
 
 typedef struct Node
 {   
