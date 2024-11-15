@@ -104,6 +104,15 @@ void count_wood(Stack* s, wood_count_list* list) {
     }
 }
 
+void wood_count_list_free(wood_count_list* list) {
+    wood_count* current = list->first;
+    while(current->next != NULL) {
+        wood_count* temp = current;
+        current = current->next;
+        free(temp);
+    }
+}
+
 int main() {
     Stack_init(&wood);
     for(int i = 0; i < 10; i++) {
@@ -118,5 +127,6 @@ int main() {
     wood_count_printf(&list);
 
     Stack_printf(&wood);
+    wood_count_list_free(&list);
     return 0;
 }
