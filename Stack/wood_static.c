@@ -37,6 +37,7 @@ void wood_count_init(wood_count_list* list, wood_count* first, wood_count* last)
     list->first = first;
     list->first->next = last;
     list->last = last;
+    list->last->next = NULL;
 
     list->first->info.age = -1;
     list->first->info.count = 0;
@@ -55,12 +56,12 @@ void wood_count_add(wood_count_list* list, int age) {
     //     return;    
     // }
     
-    // if(list->last == NULL) {
-    //     list->first->next = new_wood;
-    //     list->last = new_wood;
-    //     list->last->next = NULL;
-    //     return;
-    // }
+    if(list->last->info.age == -1) {
+        list->first->next = new_wood;
+        list->last = new_wood;
+        list->last->next = NULL;
+        return;
+    }
 
     list->last->next = new_wood;
     new_wood->next = NULL;
@@ -76,25 +77,30 @@ void wood_count_printf(wood_count_list* list) {
 }
 
 void count_wood(Stack* s, wood_count_list* list) {
+    if(!Stack_isEmpty(s)) {
+        data_type temp;
+        Stack_pop(s, &temp);
+        list->first->info.age = temp.age;
+        list->first->info.count = 1;
+    }
+
     while(!Stack_isEmpty(s)) {
         data_type temp;
         Stack_pop(s, &temp);
-
         wood_count* current = list->first;
-        if(current->info.age == -1) {
-            current->info.age = temp.age;
-            current->info.count = 1;
-            continue;
-        }
 
+        int check = 0;
         while(current->next != NULL) {
             if(current->info.age == temp.age) {
                 current->info.count++;
+                check = 1;
                 break;
             }
             current = current->next;
         } // Nếu ko có thì thêm mới
-        wood_count_add(list, temp.age);
+        if(check == 0){
+            wood_count_add(list, temp.age);
+        }
     }
 }
 
@@ -105,7 +111,9 @@ int main() {
     }
 
     wood_count_list list;
-    wood_count_init(&list, NULL, NULL);
+    wood_count* first = (wood_count*)malloc(sizeof(wood_count));
+    wood_count* last = (wood_count*)malloc(sizeof(wood_count));
+    wood_count_init(&list, first, last);
     count_wood(&wood, &list);
     wood_count_printf(&list);
 
