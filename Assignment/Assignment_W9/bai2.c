@@ -5,6 +5,38 @@ void remove_duplicate_words(List* L);
 int is_duplicate_word(Node* word);
 void print_list(List* L);
 
+int main() {
+    List L;
+    Node* first = (Node*)malloc(sizeof(Node));
+    strcpy(first->data, "O");
+    Node* second = (Node*)malloc(sizeof(Node));
+    strcpy(second->data, "phia");
+    Node* third = (Node*)malloc(sizeof(Node));
+    strcpy(third->data, "xa");
+    Node* fourth = (Node*)malloc(sizeof(Node));
+    strcpy(fourth->data, "co");
+    Node* fifth = (Node*)malloc(sizeof(Node));
+    strcpy(fifth->data, "lang");
+    Node* sixth = (Node*)malloc(sizeof(Node));
+    strcpy(sixth->data, "do");
+    Node* seventh = (Node*)malloc(sizeof(Node));
+    strcpy(seventh->data, "do");
+    Node* last = (Node*)malloc(sizeof(Node));
+    strcpy(last->data, "hello");
+
+    List_init(&L, first, last);
+
+    char most_freq_word[5];
+    int unique_word_count;
+
+    count_words(&L, most_freq_word, &unique_word_count);
+    printf("Most frequent word: %s\n", most_freq_word);
+    List_print(&L);
+    remove_duplicate_words(&L);
+
+    List_delete(&L);
+}
+
 void count_words(List* L, char* most_frequent_word, int* unique_word_count) {
     Node* current = L->first;
     Node* check;

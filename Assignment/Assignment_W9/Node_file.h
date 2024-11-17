@@ -41,6 +41,12 @@ typedef struct
  * @param last Node cuối
  */
 void List_init(List *L, Node* first, Node* last);
+
+#define FIRST 1
+#define NOT_FIRST 0
+#define LAST 1
+#define NOT_LAST 0
+#define NONE -1
 /**
  * @brief Hàm thêm 1 node vào list vào vị trí đầu/cuối/index
  * 
@@ -55,12 +61,14 @@ void List_add(List *L, Node* node, int index, int add_first, int add_last);
  * @brief Xóa node đầu/ cuối/ vị trí thứ i khỏi list
  * 
  * @param L 
- * @param index tính từ 1
+ * @param index tính từ 0
  * @param remove_first 
  * @param remove_last 
  */
 void List_remove(List *L, int index, int remove_first, int remove_last );
 
+#define SIZE 0
+#define TIME 1
 /**
  * @brief So sánh 2 node
  * 
@@ -69,10 +77,31 @@ void List_remove(List *L, int index, int remove_first, int remove_last );
  * @param mode SIZE: so sánh theo size, TIME: so sánh theo thời gian 
  * @return int 1 nếu A > B về size hoặc mới hơn, 0 nếu A <= B
  */
-
-#define SIZE 0
-#define TIME 1
 int Node_compare(Node* A, Node* B, int mode);
+
+/**
+ * @brief Khởi tạo 1 node với data cho sẵn
+ * 
+ * @param N 
+ * @param data 
+ * @return Node* 
+ */
+Node* Node_init(Node* N, data_type data);
+
+/**
+ * @brief Đổi vị trí 2 Node, để đỡ phải tính nhiều link thì thôi cứ để yên link, đổi data :))
+ * 
+ * @param A 
+ * @param B 
+ */
+void Node_swap(Node* A, Node* B);
+/**
+ * @brief Sắp xếp danh sách theo size hoặc thời gian
+ * 
+ * @param L 
+ * @param mode 
+ */
+void List_sort(List *L, int mode);
 
 /*
  * @brief Giải phóng toàn bộ danh sách
@@ -81,6 +110,12 @@ int Node_compare(Node* A, Node* B, int mode);
  */
 void List_delete(List *L);
 
+/**
+ * @brief Xóa node có data = condition
+ * 
+ * @param L 
+ * @param condition 
+ */
 void List_remove_condition(List *L, data_type condition);
 
 void List_print(List *L);
@@ -90,6 +125,7 @@ void List_print(List *L);
  * 
  * @param L 
  * @param index tính từ 0
+ * @param condition giá trị của Node cần tìm
  * @return Node* 
  */
 Node* List_goto(List *L, int index);
@@ -97,6 +133,7 @@ Node* List_goto(List *L, int index);
 void List_init(List *L, Node* first, Node* last)
 {   
     L->first = first;
+    L->first->next = last;
     L->last = last;
 }
 
@@ -133,7 +170,7 @@ void List_add(List *L, Node *new_node, int index, int add_first, int add_last)
 
 void List_remove(List *L, int index, int remove_first, int remove_last)
 {
-    if(remove_first || index == 1)
+    if(remove_first || index == 0)
     {   
         Node* temp = L->first->next;
         free(L->first);
@@ -155,11 +192,11 @@ void List_remove(List *L, int index, int remove_first, int remove_last)
         return;
     }
 
-    Node* p = List_goto(L, index - 1 - 1); // Tới vị trí trước vị trí cần xóa
+    Node* p = List_goto(L, index - 1); // Tới vị trí trước vị trí cần xóa
     if(p != NULL){
-        Node* temp = p->next->next;
+        Node* temp = p->next->next; // Phần tử sau phần tử cần xóa
 
-        if(p->next->next == NULL) {
+        if(temp == NULL) {
             L->last = p; // Nếu xóa phần tử cuối thì cập nhật lại last
         }
 
@@ -211,7 +248,7 @@ Node* List_goto(List *L, int index){
     }
     return NULL; // Không có vị trí đó trong danh sách, index nhập vào tính từ 0
 }
-#endif
+
 
 int Node_compare(Node *A, Node *B, int mode)
 {
@@ -223,15 +260,15 @@ int Node_compare(Node *A, Node *B, int mode)
         break;
     
     case TIME:
-        if(A->data.time.year > B->data.time.year){
+        if(A->data.time.year > B->data.time.year){ // mới hơn
             return 1;
-        } else if(A->data.time.month > B->data.time.month){
+        } else if(A->data.time.month > B->data.time.month){ // mới hơn
             return 1;
-        } else if(A->data.time.day > B->data.time.day){
+        } else if(A->data.time.day > B->data.time.day){ // mới hơn
             return 1;
-        } else if(A->data.time.hour > B->data.time.hour){
+        } else if(A->data.time.hour > B->data.time.hour){ // mới hơn
             return 1;
-        } else if(A->data.time.minute > B->data.time.minute){
+        } else if(A->data.time.minute > B->data.time.minute){ // mới hơn
             return 1;
         }
         break;
@@ -248,21 +285,53 @@ void Node_swap(Node* A, Node* B)
     A->data = B->data;
     B->data = temp;
 }
-/*
+
+void List_sort(List *L, int mode){
+    Node* p = L->first;
+    int first = 0;
+    int n = 0; 
+    int i = -10;
+    int j = 0;
+    // bubble sort cần xác định được tổng số phần tử và cần có 2 biến i, j để duyệt
+    // do đó lần đầu tiên bubble thì sẽ tính tổng số phần tử
+    while(n != i){ // Số lần duyệt bằng số phần tử của list - 1 (n = N - 1)
+        while((p->next != NULL) && (j != (n - i))){ // Đẩy dần phần tử lớn hơn lên trên
+            if(Node_compare(p,p->next,mode)){
+                Node_swap(p,p->next);
+            }
+            if(first == 0){
+                n++; // = n - 1
+            }
+            p = p->next; // đến phần tử tiếp theo
+            j++;
+        }
+        if(first == 0){
+            i = 0;
+            first = 1;
+        }
+        p = L->first; // quay lại đầu danh sách
+        i++;
+        j = 0;
+    }
+}
+
+Node* Node_init(Node* N, data_type data){
+    N->data = data;
+    return N;
+}
+
 void List_remove_condition(List *L, data_type condition)
 {
     Node* p = L->first;
-    Node* temp = NULL;
-    int i = 1;
+    int i = 0;
+    printf("Start check remove\n");
     do
     {
-        if(p->data == condition)
-        {
+        if((strcmp(p->data.name, condition.name) == 0) && (p->data.size == condition.size) && (p->data.time.hour == condition.time.hour) && (p->data.time.minute == condition.time.minute) && (p->data.time.day == condition.time.day) && (p->data.time.month == condition.time.month) && (p->data.time.year == condition.time.year)) {
+            printf("Remove %d\n", i);
             List_remove(L, i, 0, 0);
             return;
-        }
-        else
-        {
+        } else {
             p = p->next; 
             i++;
         }
@@ -270,16 +339,20 @@ void List_remove_condition(List *L, data_type condition)
     while(p != NULL);
 
 }
-*/
 
-/*
+// /*
 void List_print(List *L){
     Node* p = L->first;
     int i = 0;
     while(p != NULL){
-        printf("%d ", p->data);
+        printf("File name: %s \n", p->data.name);
+        printf("\t  File size: %lu \n", p->data.size);
+        printf("\t  File time: %d:%d %d/%d/%d \n",p->data.time.hour, p->data.time.minute, p->data.time.day, p->data.time.month, p->data.time.year);
         p = p->next;
     }
     printf("\n");
 }
-*/
+// */
+
+
+#endif
