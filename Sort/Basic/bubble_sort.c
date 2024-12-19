@@ -14,8 +14,8 @@ void swap(int* a, int* b) {
 }
 
 void bubble_sort(int* a, int n){
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n-i-1; j++){
+    for(int i = 0; i < n; i++){ // bắt đầu từ vị trí lớn nhất và giảm dần xuống (bởi vì xuống dưới sẽ là n-1-i)
+        for(int j = 0; j < n-i-1; j++){ // bắt đầu từ vị trí nhỏ nhất và tiến dần lên
             if(a[j] < a[j+1]){
                 swap(&a[j], &a[j+1]);
             }
