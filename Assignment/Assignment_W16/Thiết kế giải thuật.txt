@@ -1,0 +1,25 @@
+Đề bài:
+- Mục lục của một cuốn sách được lưu trữ dưới dạng một cây trong đó mỗi node có thể là chapter, section, subsection, subsubsection.  
+    - Khai báo cấu trúc cây để biểu diễn cuốn sách. Các thông tin chứa ở mỗi node sinh viên tự đưa vào để đảm bảo các nội dung sau được thực hiện:  
+    - Xác định số chương của cuốn sách 
+    - Tìm chương dài nhất của cuốn sách 
+    - Thực hiện tìm một mục và xoá mục đó khỏi sách. Lưu ý cập nhật lại số trang của từng mục.  
+Giải:
+- Thiết kế cấu trúc:
+
+Sách:
+
+Chương 1: ...
+    1.1 ...
+        a...
+        b...
+    1.2 ...
+Chương 2: ...
+
+-> coi như mỗi chương, mục, mục con có 2 liên kết, 1 liên kết là thằng cùng cấp, 1 liên kết là phần con đầu tiên của nó
+-> mỗi mục có số trang bắt đầu và kết thúc
+
+- Sau khi có cái cây này thì duyệt để tìm số chương: cứ đi liên tục đến thằng cùng cấp của chương đầu tiên và đếm
+- Tìm chương dài nhất bằng cách là với mỗi chương, duyệt hết mục con của nó và cộng số trang lại, lần lượt với các chương rồi in ra chương lớn nhất
+- Tìm 1 mục và xóa: 
++ duyệt tới mục đó và xóa phần đó, trước khi duyệt tới phần con thì lưu lại phần cha và số trang bắt đầu của cha để lúc sau cập nhật cho các thằng đằng sau
