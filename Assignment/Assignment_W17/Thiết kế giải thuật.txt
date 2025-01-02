@@ -11,5 +11,40 @@ Giải:
 - Xây dựng cấu trúc:
     + Linked list: 1 node có 2 link: left, right, có chiều sâu (để khi thêm sẽ phải cập nhật, so sánh để tìm được node vi phạm), có data
 - Xoay đơn:
-    + 
-- Xoay kép:
+    + Node(cha) -> (Node.right.left) && Node.right -> Node(cha) 
+    + Node(cha) -> (Node.left.right) && Node.left -> Node(cha)
+Ví dụ:
+Xoay đơn trái
+      10
+        \
+         20
+           \
+            30
+->
+         20
+        /  \
+       10   30
+Xoay đơn phải
+      30
+     /
+    20
+   /
+  10
+->
+
+         20
+        /  \
+       10   30
+
+- Xoay kép: có 4 trường hợp khi 1 nút tại vị trí k vi phạm:
+    + Trái - Trái: nút mới thêm vào phía bên trái của con trái của nút vi phạm: New_node -> Node(k).left.left
+    + Phải - Phải: nút mới thêm vào phía bên phải của con phải của nút vi phạm: New_node -> Node(k).right.right
+    + Trái - Phải: nút mới thêm vào phía bên phải của con trái của nút vi phạm: New_node -> Node(k).left.right  
+    + Phải - Trái: nút mới thêm vào phía bên trái của con phải của nút vi phạm: New_node -> Node(k).right.left
+-> Sẽ có 2 cách xử lý:
+    + Xoay đơn cho trường hợp Trái - Trái, Phải - Phải: giống như ở phía trên
+    + Xoay đôi cho trường hợp Trái - Phải, Phải - Trái
+
+Cụ thể về xoay kép:
+    + Nút lôi k1, nút con của nút lỗi k2, nút con của nút con của nút lỗi k3(mới thêm vào)
+    + Đưa nút con của nút lỗi k2 lên nằm giữa k1,k3. nút con của K2 bây giờ sẽ phân ra cho k1 và k3
