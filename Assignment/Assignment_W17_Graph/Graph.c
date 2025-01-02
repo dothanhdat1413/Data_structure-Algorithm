@@ -43,6 +43,8 @@ int main() {
 
     Graph_surf_DFS(&graph);
 
+    Graph_refresh_visited(&graph);
+    
     Graph_surf_BFS(&graph);
 
     Graph_free(&graph);

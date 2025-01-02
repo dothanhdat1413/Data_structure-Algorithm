@@ -180,16 +180,31 @@ void Graph_surf_BFS(Graph* graph){
     Node_list* temp_list = graph->first;
     Node* temp_node = NULL;
 
+    int count_node_list = 0;
     while(temp_list != NULL){
-        temp_node = temp_list->first;
-        while(temp_node != NULL){
-            if(temp_node->list->visited == 0){
-                temp_node->list->visited = 1;
-                printf("%c ", temp_node->list->name);
-            }
-            temp_node = temp_node->next;
+        count_node_list++;
+        temp_list = temp_list->next;
+    }
+
+    Node_list* queue[count_node_list];
+    int front = 0;
+    temp_list = graph->first;
+    while(temp_list != NULL){
+        if(temp_list->visited == 0){
+            queue[front] = temp_list;
+            front++;
+            temp_list->visited = 1;
+            printf("%c ", temp_list->name);
         }
         temp_list = temp_list->next;
     }
     if(TEST) printf("Done BFS surf\n");
+}
+
+void Graph_refresh_visited(Graph* graph){
+    Node_list* temp_list = graph->first;
+    while(temp_list != NULL){
+        temp_list->visited = 0;
+        temp_list = temp_list->next;
+    }
 }
